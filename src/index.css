@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Дополнительные стили */
+html, body {
+  @apply bg-light dark:bg-dark text-black dark:text-white;
+  font-family: 'Inter', sans-serif;
+}
