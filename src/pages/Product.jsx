@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom';
 import products from '../api/products';
+import { useCart } from '../context/CartContext'; // 👈 добавили импорт корзины
 
 function Product() {
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
+  const { addToCart } = useCart(); // 👈 достали функцию добавления
 
   if (!product) {
     return <div className="text-center py-10">Товар не найден</div>;
@@ -28,7 +30,10 @@ function Product() {
           <p className="text-lg mb-6">
             Мы предлагаем качественные и стильные кроссовки от ведущих брендов. Превосходный комфорт и стиль!
           </p>
-          <button className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors">
+          <button
+            onClick={() => addToCart(product)}
+            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors"
+          >
             Добавить в корзину
           </button>
         </div>
