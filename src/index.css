@@ -68,20 +68,189 @@ html, body {
   margin: 5px 0;
 }
 
-/* Filters in catalog */
+/* Контейнер каталогу */
+.catalog {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 40px;
+}
+
+/* Фільтри */
 .filters {
-  margin: 20px 0;
   display: flex;
   gap: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
 }
 
-.filters select {
-  padding: 5px 10px;
+/* Картка товару */
+.product-card {
+  position: relative;
+  width: 250px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Product grid */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+/* Зміни на наведенні */
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Фото товару */
+.product-card .image-container {
+  height: 180px;
+  overflow: hidden;
+}
+
+.product-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Ефект на фото при наведенні */
+.product-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Інформація на картці товару */
+.product-card h3 {
+  font-size: 18px;
+  margin: 15px;
+  text-align: center;
+  color: #333;
+}
+
+.product-card p {
+  font-size: 14px;
+  color: #777;
+  margin: 0 15px;
+  text-align: center;
+}
+
+/* Кнопка додавання в кошик */
+.product-card button {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff7f50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Ефект кнопки на наведенні */
+.product-card button:hover {
+  background-color: #ff5722;
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* Лінк для переходу на сторінку товару */
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+/* Сторінка товару */
+.product-detail {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Назва товару */
+.product-detail h1 {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Інформація про товар */
+.product-detail p {
+  font-size: 18px;
+  color: #555;
+  margin: 15px 0;
+  text-align: center;
+}
+
+/* Окремі стилі для фото товару */
+.product-detail .image-container {
+  display: flex;
+  justify-content: center;
   gap: 20px;
+  margin-bottom: 40px;
+}
+
+.product-detail img {
+  width: 45%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+/* Ефект для фото на сторінці товару */
+.product-detail img:hover {
+  transform: scale(1.05);
+}
+
+/* Кнопка додавання в кошик */
+.product-detail button {
+  background-color: #ff7f50;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Ефект кнопки на наведенні */
+.product-detail button:hover {
+  background-color: #ff5722;
+  transform: scale(1.05);
+}
+
+/* Блок з додатковими даними про товар */
+.product-detail .details {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+}
+
+.product-detail .details div {
+  width: 30%;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-detail .details div p {
+  margin: 5px 0;
+}
+
+/* Заголовок для блоку деталей */
+.product-detail .details h2 {
+  font-size: 22px;
+  color: #333;
+  text-align: center;
 }

@@ -1,45 +1,53 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import products from '../api/products';
-import { useCart } from '../context/CartContext'; // 👈 добавили импорт корзины
 
-function Product() {
+const Product = () => {
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
-  const { addToCart } = useCart(); // 👈 достали функцию добавления
 
   if (!product) {
-    return <div className="text-center py-10">Товар не найден</div>;
+    return <div>Товар не знайдений</div>;
   }
 
   return (
-    <section className="container mx-auto px-4 py-10">
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Изображение товара */}
-        <div className="flex-1">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-96 object-cover rounded-2xl"
-          />
-        </div>
+    <div className="product-detail">
+      <h1>{product.name}</h1>
+      <p>Ціна: {product.price} грн</p>
+      <p>Період: {product.category}</p>
+      <p>Стан: {product.condition}</p>
+      <p>Область: {product.area}</p>
 
-        {/* Информация о товаре */}
-        <div className="flex-1">
-          <h1 className="text-3xl font-semibold mb-4">{product.title}</h1>
-          <p className="text-xl text-primary font-bold mb-6">{product.price} ₽</p>
-          <p className="text-lg mb-6">
-            Мы предлагаем качественные и стильные кроссовки от ведущих брендов. Превосходный комфорт и стиль!
-          </p>
-          <button
-            onClick={() => addToCart(product)}
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors"
-          >
-            Добавить в корзину
-          </button>
+      <div className="image-container">
+        <img
+          src={product.imageFront}
+          alt={`${product.name} - Front`}
+        />
+        <img
+          src={product.imageBack}
+          alt={`${product.name} - Back`}
+        />
+      </div>
+
+      <button>Додати в кошик</button>
+
+      <div className="details">
+        <div>
+          <h2>Деталі</h2>
+          <p>Рік випуску: {product.year}</p>
+          <p>Матеріал: {product.material}</p>
+        </div>
+        <div>
+          <h2>Про товар</h2>
+          <p>Цей товар є частиною колекції монет, що випускались в різні історичні періоди...</p>
+        </div>
+        <div>
+          <h2>Опис</h2>
+          <p>{product.description}</p>
         </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default Product;
