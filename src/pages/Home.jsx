@@ -22,7 +22,7 @@ function Home() {
           </Link>
         </div>
         <img
-          src="/assets/images/banner-hero.jpg"
+          src=""
           alt="Hero Banner"
           className="rounded-xl w-full md:w-1/2 object-cover"
         />
