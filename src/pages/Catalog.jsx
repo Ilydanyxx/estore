@@ -1,27 +1,51 @@
-import products from '../api/products';
+// src/pages/Catalog.jsx
+import React, { useContext, useState } from 'react';
+import { CartContext } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
-import { motion } from 'framer-motion';
+import products from '../api/products';
 
-function Catalog() {
+const Catalog = () => {
+  const { addToCart } = useContext(CartContext);
+
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [filterCategory, setFilterCategory] = useState('all');
+
+  let filteredProducts = [...products];
+
+  if (filterCategory !== 'all') {
+    filteredProducts = filteredProducts.filter(
+      (p) => p.category === filterCategory
+    );
+  }
+
+  if (sortOrder === 'asc') {
+    filteredProducts.sort((a, b) => a.price - b.price);
+  } else {
+    filteredProducts.sort((a, b) => b.price - a.price);
+  }
+
   return (
-    <section className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Каталог товаров</h1>
+    <div className="catalog">
+      <div className="filters">
+        <select onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
+          <option value="asc">Ціна за зростанням</option>
+          <option value="desc">Ціна за спаданням</option>
+        </select>
 
-      <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: { opacity: 0 },
-          visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
-        }}
-      >
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        <select onChange={(e) => setFilterCategory(e.target.value)} value={filterCategory}>
+          <option value="all">Всі категорії</option>
+          <option value="coins">Монети</option>
+          <option value="notes">Банкноти</option>
+        </select>
+      </div>
+
+      <div className="products">
+        {filteredProducts.map((product) => (
+          <ProductCard key={product.id} product={product} addToCart={addToCart} />
         ))}
-      </motion.div>
-    </section>
+      </div>
+    </div>
   );
-}
+};
 
 export default Catalog;
