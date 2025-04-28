@@ -2,38 +2,30 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
 const Product = sequelize.define('Product', {
-  name: {
+  title: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
-  category: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   price: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: false
   },
-  condition: {
+  state: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
-  period: {
-    type: DataTypes.STRING,
-    allowNull: true,
+  image1: {
+    type: DataTypes.TEXT,
+    allowNull: false
   },
-  region: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  imageUrlFront: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  imageUrlBack: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+  image2: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  }
 });
 
 export default Product;

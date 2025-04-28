@@ -1,28 +1,30 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import sequelize from './db.js';
+import cors from 'cors';
 import productRoutes from './routes/productRoutes.js';
-import orderRoutes from './routes/orderRoutes.js';
+import sequelize from './db.js';
 
 dotenv.config();
-
 const app = express();
-app.use(bodyParser.json());
 
-// Підключення до бази даних
-sequelize.sync().then(() => {
-  console.log('База даних підключена');
-}).catch((err) => {
-  console.error('Помилка підключення до бази:', err);
-});
+// ДУЖЕ ВАЖЛИВО: cors ДО ВСІХ route!
+app.use(cors({
+  origin: 'http://localhost:5173',   // твій фронтенд
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}));
 
-// Маршрути
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
+// Щоб парсити JSON body
+app.use(express.json());
+
+// Твої маршрути
+app.use('/api/products', productRoutes);
 
 // Запуск сервера
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Сервер працює на порту ${PORT}`);
+const PORT = 5001;
+
+sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Сервер запущено на порті ${PORT}`);
+  });
 });

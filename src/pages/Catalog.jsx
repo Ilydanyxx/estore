@@ -1,74 +1,103 @@
-import React, { useContext, useState } from 'react';
-import { CartContext } from '../context/CartContext';
-import ProductCard from '../components/ProductCard';
-import { Link } from 'react-router-dom';  // Для навігації на сторінку товару
-import products from '../api/products';
+import { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
+import axios from 'axios';
 
 const Catalog = () => {
-  const { addToCart } = useContext(CartContext);
+  const { isAdmin } = useCart();
+  const [products, setProducts] = useState([]);
+  const [showAddForm, setShowAddForm] = useState(false);
 
-  const [sortOrderPrice, setSortOrderPrice] = useState('asc');
-  const [sortOrderCondition, setSortOrderCondition] = useState('asc');
-  const [filterCategory, setFilterCategory] = useState('all');
+  const [newProduct, setNewProduct] = useState({
+    title: '',
+    description: '',
+    price: '',
+    state: '',
+    image1: '',
+    image2: ''
+  });
 
-  let sortedProducts = [...products];
-
-  // Сортування за ціною
-  if (sortOrderPrice === 'asc') {
-    sortedProducts.sort((a, b) => a.price - b.price);
-  } else if (sortOrderPrice === 'desc') {
-    sortedProducts.sort((a, b) => b.price - a.price);
-  }
-
-  // Сортування за станом
-  const conditionOrder = {
-    "Добрий": 1,
-    "Середній": 2,
-    "Поганий": 3,
+  const fetchProducts = async () => {
+    const res = await axios.get('http://localhost:5001/api/products');
+    setProducts(res.data);
   };
 
-  if (sortOrderCondition === 'asc') {
-    sortedProducts.sort((a, b) => conditionOrder[a.condition] - conditionOrder[b.condition]);
-  } else if (sortOrderCondition === 'desc') {
-    sortedProducts.sort((a, b) => conditionOrder[b.condition] - conditionOrder[a.condition]);
-  }
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-  // Фільтрація за категорією
-  if (filterCategory !== 'all') {
-    sortedProducts = sortedProducts.filter(
-      (p) => p.category === filterCategory
-    );
-  }
+  const handleDelete = async (id) => {
+    await axios.delete(`http://localhost:5001/api/products/${id}`);
+    fetchProducts();
+  };
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    await axios.post('http://localhost:5001/api/products', newProduct);
+    setShowAddForm(false);
+    fetchProducts();
+  };
+
+  const handleFileChange = (e, field) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewProduct(prev => ({ ...prev, [field]: reader.result }));
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
-    <div className="catalog">
-      <div className="filters">
-        {/* Сортування за ціною */}
-        <select onChange={(e) => setSortOrderPrice(e.target.value)} value={sortOrderPrice}>
-          <option value="asc">Ціна за зростанням</option>
-          <option value="desc">Ціна за спаданням</option>
-        </select>
-
-        {/* Сортування за станом */}
-        <select onChange={(e) => setSortOrderCondition(e.target.value)} value={sortOrderCondition}>
-          <option value="asc">Стан (від найкращого до найгіршого)</option>
-          <option value="desc">Стан (від найгіршого до найкращого)</option>
-        </select>
-
-        {/* Фільтрація за категорією */}
-        <select onChange={(e) => setFilterCategory(e.target.value)} value={filterCategory}>
-          <option value="all">Всі категорії</option>
-          <option value="Німецька імперія">Німецька імперія</option>
-          <option value="Веймарська республіка">Веймарська республіка</option>
-          <option value="Німеччина до 1871 року">Німеччина до 1871 року</option>
-        </select>
-      </div>
-
-      <div className="products">
-        {sortedProducts.map((product) => (
-          <Link key={product.id} to={`/product/${product.id}`} className="product-link">
-            <ProductCard product={product} addToCart={addToCart} />
-          </Link>
+    <div className="catalog-page">
+      <h1>Каталог</h1>
+      {isAdmin && (
+        <>
+          <button onClick={() => setShowAddForm(!showAddForm)}>+ Додати товар</button>
+          {showAddForm && (
+            <form onSubmit={handleAddProduct}>
+              <input
+                type="text"
+                placeholder="Назва"
+                value={newProduct.title}
+                onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Опис"
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+              />
+              <input
+                type="number"
+                placeholder="Ціна"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Стан"
+                value={newProduct.state}
+                onChange={(e) => setNewProduct({ ...newProduct, state: e.target.value })}
+              />
+              <input type="file" onChange={(e) => handleFileChange(e, 'image1')} />
+              <input type="file" onChange={(e) => handleFileChange(e, 'image2')} />
+              <button type="submit">Додати</button>
+            </form>
+          )}
+        </>
+      )}
+      <div className="product-list">
+        {products.map(product => (
+          <div key={product.id} className="product-card">
+            <img src={product.image1} alt={product.title} width="150" />
+            <h3>{product.title}</h3>
+            <p>{product.price} грн</p>
+            <p>Стан: {product.state}</p>
+            {isAdmin && (
+              <button onClick={() => handleDelete(product.id)}>Видалити</button>
+            )}
+          </div>
         ))}
       </div>
     </div>

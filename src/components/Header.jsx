@@ -1,26 +1,47 @@
-// src/components/Header.jsx
-import React from 'react';
+import { useState } from 'react';
+import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle';
-import BurgerMenu from './BurgerMenu';
 
 const Header = () => {
+  const { isAdmin, loginAsAdmin, logoutAdmin } = useCart();
+  const [showLogin, setShowLogin] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    const success = loginAsAdmin(username, password);
+    if (success) {
+      setShowLogin(false);
+    } else {
+      alert('Неправильний логін або пароль');
+    }
+  };
+
   return (
     <header className="header">
-      <nav className="nav">
-        <div className="logo">
-          <Link to="/">E-Store</Link>
+      <Link to="/">Головна</Link> | <Link to="/catalog">Каталог</Link>
+      {isAdmin ? (
+        <button onClick={logoutAdmin}>Вийти (Адмін)</button>
+      ) : (
+        <button onClick={() => setShowLogin(!showLogin)}>Адміністратор</button>
+      )}
+      {showLogin && (
+        <div className="login-popup">
+          <input
+            type="text"
+            placeholder="Логін"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handleLogin}>Увійти</button>
         </div>
-        <div className="desktop-menu">
-          <Link to="/">Home</Link>
-          <Link to="/catalog">Catalog</Link>
-          <Link to="/cart">Cart</Link>
-          <ThemeToggle />
-        </div>
-        <div className="mobile-menu">
-          <BurgerMenu />
-        </div>
-      </nav>
+      )}
     </header>
   );
 };

@@ -1,39 +1,28 @@
 import { createContext, useContext, useState } from 'react';
 
-export const CartContext = createContext(); // тут експортуємо CartContext через "export"
+const CartContext = createContext();
 
-export function CartProvider({ children }) {
+export const useCart = () => useContext(CartContext);
+
+export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false); // новий стейт для адміна
 
-  const addToCart = (product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevItems, { ...product, quantity: 1 }];
-    });
+  const loginAsAdmin = (username, password) => {
+    if (username === 'admin' && password === 'admin') {
+      setIsAdmin(true);
+      return true;
+    }
+    return false;
   };
 
-  const removeFromCart = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
+  const logoutAdmin = () => {
+    setIsAdmin(false);
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cartItems, setCartItems, isAdmin, loginAsAdmin, logoutAdmin }}>
       {children}
     </CartContext.Provider>
   );
-}
-
-export function useCart() {
-  return useContext(CartContext);
-}
+};
