@@ -1,14 +1,25 @@
-// backend/routes/productRoutes.js
 import express from 'express';
 import pool from '../db.js';
 
 const router = express.Router();
 
-// Отримати всі товари
+// Отримати всі товари з можливістю фільтрації за категорією
 router.get('/', async (req, res) => {
+  const { category } = req.query; // отримуємо параметр 'category' з запиту
+
+  let query = 'SELECT * FROM products';
+  let values = [];
+
+  if (category && category !== 'all') {
+    query += ' WHERE category = $1'; // фільтруємо за категорією, якщо вона вказана
+    values = [category];
+  }
+
+  query += ' ORDER BY id DESC'; // Сортуємо за id
+
   try {
-    const result = await pool.query('SELECT * FROM products ORDER BY id DESC');
-    res.json(result.rows);
+    const result = await pool.query(query, values);
+    res.json(result.rows); // Повертаємо результат
   } catch (error) {
     console.error('Помилка при отриманні товарів:', error);
     res.status(500).json({ message: 'Помилка сервера' });
