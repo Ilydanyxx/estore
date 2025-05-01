@@ -1,6 +1,7 @@
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import emailjs from 'emailjs-com';
 
 function Checkout() {
   const { cartItems, clearCart } = useCart();
@@ -24,11 +25,32 @@ function Checkout() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Здесь будет отправка данных на сервер
-    console.log('Оформление заказа:', { formData, cartItems });
+    const orderDetails = cartItems
+      .map(item => `${item.title} — ${item.price} грн`)
+      .join('\n');
 
-    clearCart(); // очищаем корзину после оформления
-    navigate('/success'); // переадресация на страницу успешного заказа
+    const templateParams = {
+      name: formData.name,
+      phone: formData.phone,
+      address: formData.address,
+      order_details: orderDetails,
+      total_price: totalPrice,
+    };
+
+    emailjs.send(
+      'service_vprt0l9',
+      'template_qsljh8j',
+      templateParams,
+      'P3zvlW2ziZQEEJ7wS'
+    )
+    .then(() => {
+      clearCart();
+      navigate('/success');
+    })
+    .catch((error) => {
+      console.error('Помилка при надсиланні email:', error);
+      alert('Не вдалося надіслати замовлення. Спробуйте ще раз.');
+    });
   };
 
   if (cartItems.length === 0) {
@@ -57,7 +79,7 @@ function Checkout() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-gray-300 rounded-lg p-4"
         />
         <input
           type="tel"
@@ -66,7 +88,7 @@ function Checkout() {
           value={formData.phone}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-gray-300 rounded-lg p-4"
         />
         <textarea
           name="address"
@@ -74,14 +96,14 @@ function Checkout() {
           value={formData.address}
           onChange={handleChange}
           required
-          className="border border-gray-300 rounded-lg p-4 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-gray-300 rounded-lg p-4 h-32 resize-none"
         ></textarea>
 
         <div className="flex justify-between items-center mt-4">
-          <p className="text-xl font-bold">Итого: {totalPrice} ₽</p>
+          <p className="text-xl font-bold">Итого: {totalPrice} грн</p>
           <button
             type="submit"
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors"
+            className="bg-primary text-white px-6 py-3 rounded-lg"
           >
             Подтвердить заказ
           </button>
