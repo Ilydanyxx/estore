@@ -1,22 +1,12 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+// backend/db.js
+import pkg from 'pg';
+const { Pool } = pkg;
 
-dotenv.config();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // якщо використовуєш Heroku або хмару
+  },
+});
 
-// Перевірка значень змінних середовища
-console.log('DB_NAME:', process.env.DB_NAME);
-console.log('DB_USER:', process.env.DB_USER);
-console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
-console.log('DB_HOST:', process.env.DB_HOST);
-
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'postgres',
-  }
-);
-
-export default sequelize;
+export default pool;

@@ -42,6 +42,7 @@ const Header = () => {
           <button onClick={handleLogin}>Увійти</button>
         </div>
       )}
+      
     </header>
   );
 };

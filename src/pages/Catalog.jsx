@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Catalog = () => {
-  const { isAdmin } = useCart();
+  const { isAdmin, addToCart, cartItems } = useCart();
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
-
   const [newProduct, setNewProduct] = useState({
     title: '',
     description: '',
@@ -17,8 +19,12 @@ const Catalog = () => {
   });
 
   const fetchProducts = async () => {
-    const res = await axios.get('http://localhost:5001/api/products');
-    setProducts(res.data);
+    try {
+      const res = await axios.get('http://localhost:5001/api/products');
+      setProducts(res.data);
+    } catch (error) {
+      console.error('Помилка при завантаженні товарів:', error);
+    }
   };
 
   useEffect(() => {
@@ -26,15 +32,31 @@ const Catalog = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5001/api/products/${id}`);
-    fetchProducts();
+    try {
+      await axios.delete(`http://localhost:5001/api/products/${id}`);
+      fetchProducts();
+    } catch (error) {
+      console.error('Помилка при видаленні товару:', error);
+    }
   };
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5001/api/products', newProduct);
-    setShowAddForm(false);
-    fetchProducts();
+    try {
+      await axios.post('http://localhost:5001/api/products', newProduct);
+      setShowAddForm(false);
+      setNewProduct({
+        title: '',
+        description: '',
+        price: '',
+        state: '',
+        image1: '',
+        image2: ''
+      });
+      fetchProducts();
+    } catch (error) {
+      console.error('Помилка при додаванні товару:', error);
+    }
   };
 
   const handleFileChange = (e, field) => {
@@ -48,9 +70,27 @@ const Catalog = () => {
     }
   };
 
+  const handleAddToCart = async (product) => {
+    try {
+      const isInCart = cartItems.some(item => item.id === product.id);
+      if (!isInCart) {
+        addToCart(product);
+        await axios.delete(`http://localhost:5001/api/products/${product.id}`);
+        fetchProducts();
+      }
+    } catch (error) {
+      console.error('Помилка при додаванні до кошика:', error);
+    }
+  };
+
   return (
     <div className="catalog-page">
       <h1>Каталог</h1>
+
+      {!isAdmin && (
+        <button onClick={() => navigate('/cart')}>Перейти в кошик</button>
+      )}
+
       {isAdmin && (
         <>
           <button onClick={() => setShowAddForm(!showAddForm)}>+ Додати товар</button>
@@ -87,6 +127,7 @@ const Catalog = () => {
           )}
         </>
       )}
+
       <div className="product-list">
         {products.map(product => (
           <div key={product.id} className="product-card">
@@ -94,8 +135,11 @@ const Catalog = () => {
             <h3>{product.title}</h3>
             <p>{product.price} грн</p>
             <p>Стан: {product.state}</p>
-            {isAdmin && (
+
+            {isAdmin ? (
               <button onClick={() => handleDelete(product.id)}>Видалити</button>
+            ) : (
+              <button onClick={() => handleAddToCart(product)}>Додати в кошик</button>
             )}
           </div>
         ))}
