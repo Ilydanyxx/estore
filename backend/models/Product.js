@@ -20,11 +20,11 @@ const Product = sequelize.define('Product', {
   },
   image1: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: true
   },
   image2: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: true
   }
 });
 

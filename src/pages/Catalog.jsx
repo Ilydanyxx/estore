@@ -42,8 +42,31 @@ const Catalog = () => {
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
+  
+    if (!newProduct.title || !newProduct.description || !newProduct.price || !newProduct.state) {
+      alert('Будь ласка, заповніть усі обов’язкові поля.');
+      return;
+    }
+  
+    const preparedProduct = {
+      title: newProduct.title,
+      description: newProduct.description,
+      price: parseFloat(newProduct.price),
+      state: newProduct.state
+    };
+  
+    // Додаємо зображення лише якщо вони є
+    if (newProduct.image1) preparedProduct.image1 = newProduct.image1;
+    if (newProduct.image2) preparedProduct.image2 = newProduct.image2;
+  
+    console.log('Що надсилаємо на сервер:', preparedProduct); // DEBUG
+  
     try {
-      await axios.post('http://localhost:5001/api/products', newProduct);
+      await axios.post('http://localhost:5001/api/products', preparedProduct, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       setShowAddForm(false);
       setNewProduct({
         title: '',
@@ -55,7 +78,7 @@ const Catalog = () => {
       });
       fetchProducts();
     } catch (error) {
-      console.error('Помилка при додаванні товару:', error);
+      console.error('Помилка при додаванні товару:', error.response?.data || error);
     }
   };
 
