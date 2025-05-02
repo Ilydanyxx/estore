@@ -1,31 +1,35 @@
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useState } from 'react';
 
 function Cart() {
   const { cartItems, removeFromCart } = useCart();
+  const [loading, setLoading] = useState(false); // Додаємо стан для індикатора завантаження
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
 
   const handleRemoveFromCart = async (itemId) => {
+    setLoading(true); // Включаємо індикатор завантаження
+
     try {
       const itemToReturn = cartItems.find(item => item.id === itemId);
-
-      // Видаляємо з кошика
-      removeFromCart(itemId);
-
-      // Повертаємо товар в каталог
+  
       if (itemToReturn) {
-        await axios.post('http://localhost:5001/api/products', {
-          title: itemToReturn.title,
-          description: itemToReturn.description,
-          price: itemToReturn.price,
-          state: itemToReturn.state,
-          image1: itemToReturn.image1,
-          image2: itemToReturn.image2
+        // Видаляємо товар з кошика
+        removeFromCart(itemId);
+
+        // Повертаємо товар в каталог (is_hidden = false)
+        await axios.put(`http://localhost:5001/api/products/${itemToReturn.id}`, {
+          is_hidden: false
         });
+      } else {
+        alert('Товар не знайдено в кошику');
       }
     } catch (error) {
       console.error('Помилка при видаленні товару з кошика:', error);
+      alert('Сталася помилка при обробці вашого запиту. Спробуйте ще раз.');
+    } finally {
+      setLoading(false); // Вимикаємо індикатор завантаження
     }
   };
 
@@ -57,8 +61,9 @@ function Cart() {
             <button
               onClick={() => handleRemoveFromCart(item.id)}
               className="text-red-500 hover:underline"
+              disabled={loading} // Забороняємо повторне натискання при завантаженні
             >
-              Видалити
+              {loading ? 'Видалення...' : 'Видалити'}
             </button>
           </div>
         ))}

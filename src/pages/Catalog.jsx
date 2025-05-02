@@ -119,14 +119,20 @@ const Catalog = () => {
     try {
       const isInCart = cartItems.some(item => item.id === product.id);
       if (!isInCart) {
+        // Приховуємо товар на сервері
+        await axios.put(`http://localhost:5001/api/products/${product.id}`, {
+          is_hidden: true
+        });
+  
         addToCart(product);
-        await axios.delete(`http://localhost:5001/api/products/${product.id}`);
-        fetchProducts();
+        fetchProducts(); // оновлюємо список
       }
     } catch (error) {
       console.error('Помилка при додаванні до кошика:', error);
     }
   };
+  
+  
 
   return (
     <div className="catalog-page">
@@ -179,7 +185,10 @@ const Catalog = () => {
       )}
 
       <div className="product-list">
-        {products.map(product => (
+      {products
+  .filter(product => !cartItems.some(item => item.id === product.id))
+  .map(product => (
+
           <div key={product.id} className="product-card">
             {product.image1 && <img src={product.image1} alt={product.title} style={{ width: '100px' }} />}
             <h3>{product.title}</h3>

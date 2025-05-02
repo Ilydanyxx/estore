@@ -81,19 +81,48 @@ router.post('/', async (req, res) => {
 });
 
 // Видалити товар
+// Видалити товар
 router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: 'Товар не знайдено' });
+    const { id } = req.params;
+  
+    console.log('ID товару для видалення:', id); // Логування ID
+  
+    try {
+      const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+  
+      console.log('Результат видалення товару:', result); // Логування результату запиту
+  
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'Товар не знайдено' });
+      }
+  
+      res.status(200).json({ message: 'Товар видалено' });
+    } catch (error) {
+      console.error('Помилка при видаленні товару:', error);
+      res.status(500).json({ message: 'Помилка сервера' });
     }
-    res.status(200).json({ message: 'Товар видалено' });
-  } catch (error) {
-    console.error('Помилка при видаленні товару:', error);
-    res.status(500).json({ message: 'Помилка сервера' });
-  }
-});
+  });
+  
+
+// Оновити is_hidden (приховати або показати товар)
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { is_hidden } = req.body;
+  
+    try {
+      const result = await pool.query(
+        'UPDATE products SET is_hidden = $1 WHERE id = $2 RETURNING *',
+        [is_hidden, id]
+      );
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'Товар не знайдено' });
+      }
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error('Помилка при оновленні товару:', error);
+      res.status(500).json({ message: 'Помилка сервера' });
+    }
+  });
+  
 
 export default router;

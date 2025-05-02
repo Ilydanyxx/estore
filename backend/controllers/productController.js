@@ -14,7 +14,12 @@ export const getProducts = async (req, res) => {
   try {
     console.log('Отримано параметри запиту:', req.query);
     const { category, sortBy, sortOrder } = req.query;
-    const whereClause = category && category !== 'all' ? { category } : {};
+
+    const whereClause = {
+      is_hidden: false, // Завжди перевіряємо is_hidden
+      ...(category && category !== 'all' ? { category } : {}) // Додаємо умову для категорії, якщо вона вказана
+    };
+    
 
     let products = await Product.findAll({ where: whereClause });
 

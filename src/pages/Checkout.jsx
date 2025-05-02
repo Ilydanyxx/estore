@@ -2,6 +2,7 @@ import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import emailjs from 'emailjs-com';
+import axios from 'axios'; // ← не забудь імпортувати, якщо ще не імпортовано
 
 function Checkout() {
   const { cartItems, clearCart } = useCart();
@@ -11,6 +12,7 @@ function Checkout() {
     phone: '',
     address: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // Додаємо стан для контролю над відправленням
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -22,36 +24,52 @@ function Checkout() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  
 
-    const orderDetails = cartItems
-      .map(item => `${item.title} — ${item.price} грн`)
-      .join('\n');
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    const templateParams = {
-      name: formData.name,
-      phone: formData.phone,
-      address: formData.address,
-      order_details: orderDetails,
-      total_price: totalPrice,
-    };
+  if (isSubmitting) return;
+  setIsSubmitting(true);
 
-    emailjs.send(
-      'service_vprt0l9',
-      'template_qsljh8j',
-      templateParams,
-      'P3zvlW2ziZQEEJ7wS'
-    )
-    .then(() => {
-      clearCart();
-      navigate('/success');
-    })
-    .catch((error) => {
-      console.error('Помилка при надсиланні email:', error);
-      alert('Не вдалося надіслати замовлення. Спробуйте ще раз.');
-    });
+  const orderDetails = cartItems
+    .map(item => `${item.title} — ${item.price} грн`)
+    .join('\n');
+
+  const templateParams = {
+    name: formData.name,
+    phone: formData.phone,
+    address: formData.address,
+    order_details: orderDetails,
+    total_price: totalPrice,
   };
+
+  emailjs.send(
+    'service_vprt0l9',
+    'template_qsljh8j',
+    templateParams,
+    'P3zvlW2ziZQEEJ7wS'
+  )
+  .then(async () => {
+    // ❗ Видаляємо товари з бази
+    await Promise.all(
+      cartItems.map(item =>
+        axios.delete(`http://localhost:5001/api/products/${item.id}`)
+      )
+    );
+
+    clearCart();
+    navigate('/success');
+  })
+  .catch((error) => {
+    console.error('Помилка при надсиланні email або видаленні товарів:', error);
+    alert('Не вдалося завершити оформлення замовлення. Спробуйте ще раз.');
+  })
+  .finally(() => {
+    setIsSubmitting(false);
+  });
+};
+
 
   if (cartItems.length === 0) {
     return (
@@ -104,8 +122,9 @@ function Checkout() {
           <button
             type="submit"
             className="bg-primary text-white px-6 py-3 rounded-lg"
+            disabled={isSubmitting} // Забороняємо кнопку при відправленні
           >
-            Подтвердить заказ
+            {isSubmitting ? 'Оформлення...' : 'Подтвердить заказ'}
           </button>
         </div>
       </form>
