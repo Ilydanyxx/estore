@@ -1,56 +1,41 @@
+import { Op, Sequelize } from 'sequelize';
 import Product from '../models/Product.js';
 
-// Отримати всі товари (з підтримкою фільтрації за категорією)
+const parseState = (stateString) => {
+  if (!stateString) return 0;
+  const base = parseInt(stateString);
+  if (isNaN(base)) return 0;
+  if (stateString.includes('+')) return base + 0.3;
+  if (stateString.includes('−') || stateString.includes('-')) return base - 0.3;
+  return base;
+};
+
 export const getProducts = async (req, res) => {
   try {
-    console.log('Отримано параметри запиту:', req.query);  // Логування всіх параметрів запиту
-    const { category } = req.query;
+    console.log('Отримано параметри запиту:', req.query);
+    const { category, sortBy, sortOrder } = req.query;
     const whereClause = category && category !== 'all' ? { category } : {};
 
-    const products = await Product.findAll({ where: whereClause });
+    let products = await Product.findAll({ where: whereClause });
+
+    // Сортування
+    if (sortBy === 'price') {
+      products.sort((a, b) => {
+        const aPrice = parseFloat(a.price);
+        const bPrice = parseFloat(b.price);
+        return sortOrder === 'desc' ? bPrice - aPrice : aPrice - bPrice;
+      });
+    } else if (sortBy === 'state') {
+      products.sort((a, b) => {
+        const aState = parseState(a.state);
+        const bState = parseState(b.state);
+        return sortOrder === 'desc' ? bState - aState : aState - bState;
+      });
+    }
+
     res.json(products);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Помилка при отриманні товарів' });
-  }
-};
-
-
-
-// Додати товар
-export const createProduct = async (req, res) => {
-  try {
-    const { title, description, price, state, image1, image2, category } = req.body;
-
-    const product = await Product.create({
-      title,
-      description,
-      price,
-      state,
-      image1,
-      image2,
-      category
-    });
-
-    res.status(201).json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Помилка при створенні товару' });
-  }
-};
-
-// Видалити товар
-export const deleteProduct = async (req, res) => {
-  try {
-    const product = await Product.findByPk(req.params.id);
-    if (!product) {
-      return res.status(404).json({ error: 'Товар не знайдено' });
-    }
-
-    await product.destroy();
-    res.json({ message: 'Товар видалено' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Помилка при видаленні товару' });
   }
 };

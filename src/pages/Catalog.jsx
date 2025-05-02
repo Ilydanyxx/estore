@@ -9,6 +9,13 @@ const categoryOptions = [
   'Німеччина до 1871 року'
 ];
 
+const sortOptions = [
+  { value: 'price_asc', label: 'Ціна: від найменшої' },
+  { value: 'price_desc', label: 'Ціна: від найбільшої' },
+  { value: 'state_asc', label: 'Стан: від найгіршого' },
+  { value: 'state_desc', label: 'Стан: від найкращого' }
+];
+
 const Catalog = () => {
   const { isAdmin, addToCart, cartItems } = useCart();
   const navigate = useNavigate();
@@ -16,6 +23,7 @@ const Catalog = () => {
   const [products, setProducts] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
+  const [selectedSort, setSelectedSort] = useState('');
 
   const [newProduct, setNewProduct] = useState({
     title: '',
@@ -28,22 +36,25 @@ const Catalog = () => {
   });
 
   const fetchProducts = async () => {
-    console.log('Запит до сервера з категорією:', selectedCategoryFilter);  // Логування категорії
-    const params = selectedCategoryFilter !== 'all' ? { category: selectedCategoryFilter } : {};
-    console.log('Запит з параметрами:', params);  // Логування запиту
     try {
-      const res = await axios.get('http://localhost:5001/api/products', { params });
+      const params = {};
+      if (selectedCategoryFilter !== 'all') {
+        params.category = selectedCategoryFilter;
+      }
+      if (selectedSort) {
+        params.sort = selectedSort;
+      }
+
+      const res = await axios.get(`http://localhost:5001/api/products`, { params });
       setProducts(res.data);
     } catch (error) {
       console.error('Помилка при завантаженні товарів:', error);
     }
   };
-  
-  
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedCategoryFilter]);
+  }, [selectedCategoryFilter, selectedSort]);
 
   const handleDelete = async (id) => {
     try {
@@ -121,13 +132,22 @@ const Catalog = () => {
     <div className="catalog-page">
       <h1>Каталог</h1>
 
-      {/* Фільтр категорії */}
       <label>
         Категорія:{' '}
         <select value={selectedCategoryFilter} onChange={(e) => setSelectedCategoryFilter(e.target.value)}>
           <option value="all">Усі категорії</option>
           {categoryOptions.map(cat => (
             <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        Сортувати за:{' '}
+        <select value={selectedSort} onChange={(e) => setSelectedSort(e.target.value)}>
+          <option value="">Без сортування</option>
+          {sortOptions.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
       </label>
@@ -141,43 +161,17 @@ const Catalog = () => {
           <button onClick={() => setShowAddForm(!showAddForm)}>+ Додати товар</button>
           {showAddForm && (
             <form onSubmit={handleAddProduct}>
-              <input
-                type="text"
-                placeholder="Назва"
-                value={newProduct.title}
-                onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Опис"
-                value={newProduct.description}
-                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-              />
-              <input
-                type="number"
-                placeholder="Ціна"
-                value={newProduct.price}
-                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Стан"
-                value={newProduct.state}
-                onChange={(e) => setNewProduct({ ...newProduct, state: e.target.value })}
-              />
-
-              {/* Категорія */}
-              <select
-                value={newProduct.category}
-                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-              >
+              <input type="text" placeholder="Назва" value={newProduct.title} onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })} />
+              <input type="text" placeholder="Опис" value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} />
+              <input type="number" placeholder="Ціна" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} />
+              <input type="text" placeholder="Стан (наприклад, 3+)" value={newProduct.state} onChange={(e) => setNewProduct({ ...newProduct, state: e.target.value })} />
+              <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}>
                 {categoryOptions.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-
-              <input type="file" onChange={(e) => handleFileChange(e, 'image1')} />
-              <input type="file" onChange={(e) => handleFileChange(e, 'image2')} />
+              <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'image1')} />
+              <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'image2')} />
               <button type="submit">Додати</button>
             </form>
           )}
@@ -187,16 +181,16 @@ const Catalog = () => {
       <div className="product-list">
         {products.map(product => (
           <div key={product.id} className="product-card">
-            <img src={product.image1} alt={product.title} width="150" />
+            {product.image1 && <img src={product.image1} alt={product.title} style={{ width: '100px' }} />}
             <h3>{product.title}</h3>
-            <p>{product.price} грн</p>
+            <p>{product.description}</p>
+            <p>Ціна: {product.price}</p>
             <p>Стан: {product.state}</p>
             <p>Категорія: {product.category}</p>
-
             {isAdmin ? (
               <button onClick={() => handleDelete(product.id)}>Видалити</button>
             ) : (
-              <button onClick={() => handleAddToCart(product)}>Додати в кошик</button>
+              <button onClick={() => handleAddToCart(product)}>У кошик</button>
             )}
           </div>
         ))}
