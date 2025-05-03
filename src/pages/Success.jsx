@@ -2,16 +2,16 @@ import { Link } from 'react-router-dom';
 
 function Success() {
   return (
-    <section className="container mx-auto px-4 py-20 text-center">
-      <h1 className="text-4xl font-bold mb-6 text-primary">Спасибо за заказ!</h1>
-      <p className="text-gray-600 mb-10">
-        Ваш заказ принят. Мы скоро свяжемся с вами для подтверждения.
+    <section className="max-w-2xl mx-auto px-6 py-20 bg-white rounded-2xl shadow-lg text-center mt-16">
+      <h1 className="text-4xl font-bold text-yellow-600 mb-6">Дякуємо за замовлення!</h1>
+      <p className="text-gray-600 text-lg mb-10">
+        Ваше замовлення прийнято. Ми зв’яжемося з вами найближчим часом для підтвердження.
       </p>
       <Link
         to="/catalog"
-        className="inline-block bg-primary text-white px-8 py-4 rounded-lg hover:bg-primary-dark transition-colors"
+        className="inline-block bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 rounded-xl transition"
       >
-        Вернуться в каталог
+        Повернутися в каталог
       </Link>
     </section>
   );
