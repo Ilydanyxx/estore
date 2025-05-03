@@ -2,279 +2,146 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Дополнительные стили */
+/* Базові стилі */
 html, body {
-  @apply bg-light dark:bg-dark text-black dark:text-white;
+  @apply bg-background text-primary;
   font-family: 'Inter', sans-serif;
 }
 
 /* Header */
 .header {
-  padding: 10px 20px;
-  background: #333;
-  color: white;
+  @apply p-4 bg-primary text-white shadow-md;
 }
 
 .nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @apply flex items-center justify-between;
 }
 
 .logo a {
-  color: white;
-  text-decoration: none;
-  font-size: 24px;
+  @apply text-white text-2xl font-serif no-underline;
 }
 
+/* Меню */
 .desktop-menu {
-  display: flex;
-  gap: 20px;
+  @apply flex gap-6;
 }
 
 .desktop-menu a {
-  color: white;
-  text-decoration: none;
+  @apply text-white no-underline hover:underline transition;
 }
 
-/* Mobile menu */
+/* Бургер-меню */
 .burger-container {
   position: relative;
 }
 
 .burger-button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 28px;
-  cursor: pointer;
+  @apply bg-transparent border-0 text-white text-2xl cursor-pointer;
 }
 
 .burger-dropdown {
-  position: absolute;
-  right: 0;
-  top: 40px;
-  background: white;
-  border: 1px solid #ccc;
-  display: flex;
-  flex-direction: column;
-  min-width: 150px;
-  padding: 10px;
+  @apply absolute right-0 top-10 bg-white border border-gray-300 flex flex-col min-w-[150px] p-4 shadow-lg rounded-xl z-50;
 }
 
 .burger-dropdown a {
-  text-decoration: none;
-  color: #333;
-  margin: 5px 0;
+  @apply no-underline text-dark py-1 hover:text-accent transition;
 }
 
-/* Контейнер каталогу */
+/* Каталог */
 .catalog {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between;
-  padding: 40px;
+  @apply flex flex-wrap justify-center gap-8 p-10;
 }
 
 /* Фільтри */
 .filters {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-  justify-content: center;
+  @apply flex gap-6 mb-6 justify-center;
 }
 
 /* Картка товару */
 .product-card {
-  position: relative;
-  width: 250px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  @apply relative w-[260px] bg-white rounded-2xl shadow-luxury overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
 }
 
-/* Зміни на наведенні */
-.product-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Фото товару */
+/* Зображення */
 .product-card .image-container {
-  height: 180px;
-  overflow: hidden;
+  @apply h-[180px] overflow-hidden;
 }
 
 .product-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+  @apply w-full h-full object-cover transition-transform duration-300;
 }
 
-/* Ефект на фото при наведенні */
 .product-card:hover img {
-  transform: scale(1.1);
+  @apply scale-110;
 }
 
-/* Інформація на картці товару */
+/* Інформація товару */
 .product-card h3 {
-  font-size: 18px;
-  margin: 15px;
-  text-align: center;
-  color: #333;
+  @apply text-xl font-serif text-center text-primary mt-4;
 }
 
 .product-card p {
-  font-size: 14px;
-  color: #777;
-  margin: 0 15px;
-  text-align: center;
+  @apply text-sm text-muted text-center mb-4;
 }
 
-/* Кнопка додавання в кошик */
+/* Кнопка */
 .product-card button {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ff7f50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  @apply absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-accent text-white px-6 py-2 rounded-xl text-sm transition hover:opacity-90 hover:scale-105;
 }
 
-/* Ефект кнопки на наведенні */
-.product-card button:hover {
-  background-color: #ff5722;
-  transform: translateX(-50%) scale(1.05);
-}
-
-/* Лінк для переходу на сторінку товару */
+/* Посилання на товар */
 .product-link {
-  text-decoration: none;
-  color: inherit;
+  @apply no-underline text-inherit;
 }
+
 /* Сторінка товару */
 .product-detail {
-  padding: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: 'Arial', sans-serif;
+  @apply max-w-6xl mx-auto p-10 font-sans;
 }
 
-/* Назва товару */
 .product-detail h1 {
-  font-size: 36px;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+  @apply text-4xl font-serif text-primary mb-6 text-center;
 }
 
-/* Інформація про товар */
 .product-detail p {
-  font-size: 18px;
-  color: #555;
-  margin: 15px 0;
-  text-align: center;
+  @apply text-lg text-muted text-center mb-4;
 }
 
-/* Окремі стилі для фото товару */
 .product-detail .image-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 40px;
+  @apply flex justify-center gap-8 mb-10;
 }
 
 .product-detail img {
-  width: 45%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  @apply w-[45%] rounded-xl shadow-lg transition-transform duration-300 hover:scale-105;
 }
 
-/* Ефект для фото на сторінці товару */
-.product-detail img:hover {
-  transform: scale(1.05);
-}
-
-/* Кнопка додавання в кошик */
 .product-detail button {
-  background-color: #ff7f50;
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  display: block;
-  margin: 0 auto;
+  @apply bg-accent text-white px-8 py-4 rounded-xl text-lg mx-auto block transition hover:opacity-90 hover:scale-105;
 }
 
-/* Ефект кнопки на наведенні */
-.product-detail button:hover {
-  background-color: #ff5722;
-  transform: scale(1.05);
-}
-
-/* Блок з додатковими даними про товар */
+/* Блок деталей */
 .product-detail .details {
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 16px;
+  @apply mt-10 flex justify-between text-base;
 }
 
 .product-detail .details div {
-  width: 30%;
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  @apply w-[30%] p-4 bg-background rounded-xl shadow;
 }
 
 .product-detail .details div p {
-  margin: 5px 0;
+  @apply mb-2;
 }
 
-/* Заголовок для блоку деталей */
 .product-detail .details h2 {
-  font-size: 22px;
-  color: #333;
-  text-align: center;
+  @apply text-xl text-primary text-center font-serif mb-2;
 }
+
+/* Попап входу */
 .login-popup {
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  background: white;
-  padding: 15px;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  @apply absolute top-[60px] right-5 bg-white p-4 border border-primary flex flex-col gap-2 shadow-lg rounded-lg;
 }
 
+/* Форма каталогу */
 .catalog-page form {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.product-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-top: 10px;
+  @apply mt-5 flex flex-col gap-3;
 }

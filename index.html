@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="Вишуканий e-commerce магазин колекційних товарів" />
     <title>E-Store</title>
-    <!-- Добавляем иконку сайта -->
+
+    <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" />
-    <!-- Подключаем шрифты, если они есть -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Подключаем стили -->
+
+    <!-- Шрифти -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
+
+    <!-- Стилі Tailwind (скомпільований CSS-файл) -->
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
-  <body>
-    <!-- Место для монтирования React-приложения -->
+
+  <body class="bg-background text-primary font-sans">
+    <!-- React Root -->
     <div id="root"></div>
 
-    <!-- Этот скрипт подключает главный файл вашего React-приложения -->
+    <!-- Головний JS -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
