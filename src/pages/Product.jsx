@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import products from '../api/products';
+
 
 const Product = ({ addToCart }) => {
   const { id } = useParams();
