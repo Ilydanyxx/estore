@@ -16,14 +16,13 @@ export const getProducts = async (req, res) => {
     const { category, sortBy, sortOrder } = req.query;
 
     const whereClause = {
-      is_hidden: false, // Завжди перевіряємо is_hidden
-      ...(category && category !== 'all' ? { category } : {}) // Додаємо умову для категорії, якщо вона вказана
+      is_hidden: false, 
+      ...(category && category !== 'all' ? { category } : {}) 
     };
     
 
     let products = await Product.findAll({ where: whereClause });
 
-    // Сортування
     if (sortBy === 'price') {
       products.sort((a, b) => {
         const aPrice = parseFloat(a.price);

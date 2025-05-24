@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -14,4 +13,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use('/api/products', productRoutes);
 
-export default app;
+const PORT = 5001;
+app.listen(PORT, () => {
+  console.log(`Сервер запущено на порту ${PORT}`);
+});
+//export default app;

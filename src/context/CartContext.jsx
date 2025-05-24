@@ -6,7 +6,7 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false); // новий стейт для адміна
+  const [isAdmin, setIsAdmin] = useState(false); 
 
   // Зберігаємо кошик в localStorage при оновленні
   useEffect(() => {

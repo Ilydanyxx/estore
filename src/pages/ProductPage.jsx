@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 const ProductPage = () => {
   const { id } = useParams();
 
-  // Мок-дані товару
   const product = {
     id,
     name: "Назва товару",

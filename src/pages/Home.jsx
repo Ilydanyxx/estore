@@ -24,7 +24,7 @@ function Home() {
           </Link>
         </div>
         <img
-          src="/assets/images/hero-banner.jpg"
+          src="/src/assets/images/photo_2025-04-03_16-33-13.jpg"
           alt="Колекційні монети"
           className="rounded-xl w-full md:w-1/2 object-cover"
         />
@@ -34,7 +34,10 @@ function Home() {
       <div className="mt-12 text-center">
         <h2 className="text-2xl font-bold mb-4">Чому обирають Numizmatica?</h2>
         <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
-          Ми пропонуємо автентичні монети, професійне обслуговування та швидку доставку по всій Україні.
+        Колекціонування монет — це не просто хобі. Це подорож у часі, можливість доторкнутися до історії та зберегти її у власних руках. У нашому інтернет-магазині ви знайдете ретельно відібрані екземпляри — від пам’ятних монет Німецької імперії до рідкісних випусків Європи та світу.
+        </p>
+        <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+        Ми віримо, що кожна монета — це більше, ніж метал. Це — частина культури, мистецтва, подій і людей. Саме тому Numizmatica пропонує тільки перевірені та автентичні монети, з гарантованою якістю і прозорим походженням.
         </p>
       </div>
 
@@ -44,21 +47,21 @@ function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: "Монета «Гетьман Мазепа»",
-              price: "₴7,200",
-              img: "/assets/images/rare1.jpg",
+              title: "Талер 1855 Візит до монетного двору короля Йоганна",
+              price: "60$",
+              img: "/src/assets/images/photo_2025-05-09_23-44-20.jpg",
               link: "/product/rare-1"
             },
             {
-              title: "Пам’ятна монета «Скіфське золото»",
-              price: "₴6,800",
-              img: "/assets/images/rare2.jpg",
+              title: "2 талери 1844 Баден ",
+              price: "85$",
+              img: "/src/assets/images/photo_2025-05-09_23-44-59.jpg",
               link: "/product/rare-2"
             },
             {
-              title: "Монета «Київська Русь – 1000 років»",
+              title: "3 рейхсмарки 1927 450-та річниця - Тюбінгенський університет",
               price: "₴5,990",
-              img: "/assets/images/rare3.jpg",
+              img: "/src/assets/images/photo_2024-10-14_15-38-32.jpg",
               link: "/product/rare-3"
             },
           ].map((item, idx) => (
@@ -78,27 +81,34 @@ function Home() {
         </div>
       </div>
 
+      <div className="mt-12 text-center">
+        <h2 className="text-2xl font-bold mb-4">Інвестуйте в надійне</h2>
+        <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+        Монети — це не лише краса та історія. Це ще й розумна інвестиція. Історичні монети з роками тільки зростають у ціні, зберігаючи свою цінність навіть у часи економічної нестабільності. На відміну від багатьох інших активів, вони не вимагають складного обслуговування, зберігаються компактно та мають стабільний попит серед колекціонерів і інвесторів у всьому світі.
+        </p>
+      </div>
+
       {/* Топ найдорожчих монет */}
       <div className="mt-20">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Топ-3 найдорожчі монети в наявності</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: "Інвестмонета «Золото України»",
-              price: "₴25,000",
-              img: "/assets/images/expensive1.jpg",
+              title: "Талер 1554-1557 Саксонія",
+              price: "85$",
+              img: "/src/assets/images/photo_2024-10-14_15-38-32.jpg",
               link: "/product/expensive-1"
             },
             {
-              title: "Пам’ятна монета «UNESCO – Софія Київська»",
-              price: "₴18,900",
-              img: "/assets/images/expensive2.jpg",
+              title: "3 рейхсмарки 1927 450-та річниця - Тюбінгенський університет",
+              price: "₴1420",
+              img: "/src/assets/images/photo_2024-11-17_16-17-21.jpg",
               link: "/product/expensive-2"
             },
             {
-              title: "Ювілейна монета «30 років Незалежності»",
-              price: "₴15,750",
-              img: "/assets/images/expensive3.jpg",
+              title: "Талер 1601 Саксонія ",
+              price: "50$",
+              img: "/src/assets/images/photo_2024-10-14_15-47-38.jpg",
               link: "/product/expensive-3"
             },
           ].map((item, idx) => (

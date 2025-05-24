@@ -1,15 +1,15 @@
-import request from 'supertest';
-import app from '../server.js';
-import pool from '../db.js';
+//import request from 'supertest';
+//import app from '../server.js';
+//import pool from '../db.js';
 
-let createdProductId; // збережемо ID для подальших тестів
+let createdProductId;
 
 beforeAll(async () => {
-  // Можна очистити таблицю або створити щось, якщо потрібно
+  
 });
 
 afterAll(async () => {
-  await pool.end(); // Закриваємо підключення до БД після всіх тестів
+  await pool.end(); 
 });
 
 describe('Тести маршруту /api/products', () => {
@@ -34,7 +34,7 @@ describe('Тести маршруту /api/products', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('id');
-    createdProductId = res.body.id; // зберігаємо ID створеного продукту
+    createdProductId = res.body.id;
   });
 
   test('POST /api/products — помилка при невалідних даних', async () => {

@@ -6,7 +6,7 @@ function Footer() {
       <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
         {/* Лівий блок */}
         <div className="flex items-center gap-3 mb-4 md:mb-0">
-          <img src="/assets/icons/logo.svg" alt="Logo" className="h-6" />
+          <img src="/src/assets/images/photo_2025-04-15_17-41-41.jpg" alt="Logo" className="h-6" />
           <span className="font-semibold text-gray-800">
             E-Store © {new Date().getFullYear()}
           </span>

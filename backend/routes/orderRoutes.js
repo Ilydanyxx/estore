@@ -1,7 +1,6 @@
-// backend/routes/orderRoutes.js
 import express from 'express';
 import Order from '../models/Order.js';
-import Product from '../models/Product.js'; // імпортуємо модель товару
+import Product from '../models/Product.js'; 
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
@@ -9,7 +8,6 @@ dotenv.config();
 const router = express.Router();
 
 
-// Підтвердження замовлення та видалення товарів
 router.put('/:orderId/confirm', async (req, res) => {
   const { orderId } = req.params;
 
@@ -24,7 +22,6 @@ router.put('/:orderId/confirm', async (req, res) => {
       return res.status(400).json({ message: 'Замовлення вже підтверджене' });
     }
 
-    // Підтвердження
     order.status = 'confirmed';
     await order.save();
 
@@ -48,7 +45,6 @@ router.put('/:orderId/confirm', async (req, res) => {
 
     console.log(`Видалено ${deletedCount} товарів`);
 
-    // Надіслати лист адміну
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

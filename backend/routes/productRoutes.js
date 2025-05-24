@@ -1,10 +1,8 @@
-// backend/routes/productRoutes.js
 import express from 'express';
 import pool from '../db.js';
 
 const router = express.Router();
 
-// Отримати всі товари з фільтрацією та сортуванням
 router.get('/', async (req, res) => {
   const { category, sort } = req.query;
 
@@ -17,7 +15,6 @@ router.get('/', async (req, res) => {
     values.push(category);
   }
 
-  // Додаємо сортування
   let orderBy = ' ORDER BY id DESC';
 
   if (sort === 'price_asc') {
@@ -59,7 +56,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Додати новий товар
 router.post('/', async (req, res) => {
   const { title, description, price, state, image1, image2, category } = req.body;
 
@@ -80,17 +76,15 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Видалити товар
-// Видалити товар
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
   
-    console.log('ID товару для видалення:', id); // Логування ID
+    console.log('ID товару для видалення:', id);
   
     try {
       const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
   
-      console.log('Результат видалення товару:', result); // Логування результату запиту
+      console.log('Результат видалення товару:', result);
   
       if (result.rowCount === 0) {
         return res.status(404).json({ message: 'Товар не знайдено' });
@@ -104,7 +98,6 @@ router.delete('/:id', async (req, res) => {
   });
   
 
-// Оновити is_hidden (приховати або показати товар)
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { is_hidden } = req.body;
