@@ -1,6 +1,6 @@
-//import request from 'supertest';
-//import app from '../server.js';
-//import pool from '../db.js';
+import request from 'supertest';
+import app from '../server.js';
+import pool from '../db.js';
 
 let createdProductId;
 
